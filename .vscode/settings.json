@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "conio.h": "c",
+        "string.h": "c",
+        "stdio.h": "c",
+        "windows.h": "c"
+    }
+}
