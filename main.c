@@ -1,13 +1,12 @@
-#include <string.h> 
+#include <string.h>
 #include <stdio.h>
 #define clrscr() printf("\e[1;1H\e[2J")
 #include <windows.h>
 
-
 int header();
 int loginScreen();
 int caixaScreen();
-int vendasScreen(){return 0;};
+int vendasScreen();
 void setConsoleColor();
 
 typedef struct {
@@ -25,14 +24,13 @@ char userVendas[15] = "Vendas";
 char senhaCaixa[] = "senha123caixa";
 char senhaVendas[] = "senha123vendas";
 
-
 granelItem granelList[] = {
-    {"Maca", 5.50},
-    {"Tomate", 8.75},
-    {"Cenoura", 4.20},
-    {"Banana", 3.15},
-    {"Pimentao", 2.30},
-    {"Batata", 6.80}
+    {"Maca", 15.75},
+    {"Tomate", 8.10},
+    {"Cenoura", 5.29},
+    {"Banana", 11.98},
+    {"Pimentao", 13.55},
+    {"Batata", 8.99}
 };
 size_t num_granelList = sizeof(granelList) / sizeof(granelItem);
 
@@ -44,10 +42,10 @@ granelItem* linear_search(granelItem* granelList, size_t size, const char* nome)
     }
     return NULL;
 }
+
 int main(){
-
     comeco:
-
+    clrscr();
     header(loginCache);
 
     loginCache = loginScreen();
@@ -58,7 +56,7 @@ int main(){
 
     if(loginCache == 2){
         vendasScreen();
-        return 0;
+        goto comeco;
     }
 
     clrscr();
@@ -68,7 +66,6 @@ int main(){
 }
 
 int loginScreen(){
-
     printf("Digite seu Login: ");
     fgets(login, sizeof(login), stdin);
     login[strcspn(login, "\n")] = '\0';
@@ -77,6 +74,7 @@ int loginScreen(){
         printf("\nDigite sua Senha: ");
         fgets(senha, sizeof(senha), stdin);
         senha[strcspn(senha, "\n")] = '\0';
+        getchar();
 
         if(strcmp(senha, senhaCaixa) == 0){
             printf("Caixa LOGADO\n");
@@ -89,6 +87,7 @@ int loginScreen(){
         printf("\nDigite sua Senha: ");
         fgets(senha, sizeof(senha), stdin);
         senha[strcspn(senha, "\n")] = '\0';
+        getchar();
 
         if(strcmp(senha, senhaVendas) == 0){
             printf("Vendas LOGADO\n");
@@ -153,8 +152,76 @@ int caixaScreen(){
     return 0;
 }
 
-int header(int errorType){
+int vendasScreen() {
+    char produto[50];
+    float preco, quantidade, total = 0.0;
+    int numProdutos = 0;
+    int escolha;
 
+    struct {
+        char nome[50];
+        float preco;
+        float quantidade;
+    } listaProdutos[100]; // Limite de 100 produtos para simplificar
+
+    while (1) {
+        clrscr();
+        printf("Caixa de Vendas iniciado\n");
+        total = 0.0; // Reiniciar o total a cada nova execução
+        numProdutos = 0; // Reiniciar a contagem de produtos
+
+        // Loop para adicionar produtos
+        while (1) {
+            printf("\nDigite o nome do produto (ou '0' para encerrar): ");
+            fgets(produto, sizeof(produto), stdin);
+            produto[strcspn(produto, "\n")] = '\0';
+
+            if (strcmp(produto, "0") == 0) {
+                break;
+            }
+
+            printf("Digite o preco do produto: ");
+            scanf("%f", &preco);
+            printf("Digite a quantidade: ");
+            scanf("%f", &quantidade);
+            getchar(); // Limpar o buffer do teclado
+
+            // Adicionar os detalhes do produto na lista
+            strcpy(listaProdutos[numProdutos].nome, produto);
+            listaProdutos[numProdutos].preco = preco;
+            listaProdutos[numProdutos].quantidade = quantidade;
+            numProdutos++;
+
+            // Calcular o total da compra
+            total += preco * quantidade;
+        }
+
+        // Exibir o total e os produtos
+        printf("\nResumo da compra:\n");
+        for (int i = 0; i < numProdutos; i++) {
+            printf("Produto: %s | Preco: R$ %.2f | Quantidade: %.2f\n",
+                   listaProdutos[i].nome, listaProdutos[i].preco, listaProdutos[i].quantidade);
+        }
+        printf("\nValor total da compra: R$ %.2f\n", total);
+
+        // Menu de opções com validação
+        while (1) {
+            printf("\n[1] Outra venda\n[2] Voltar para a tela de login\nEscolha: ");
+            scanf("%d", &escolha);
+            getchar(); // Limpar o buffer do teclado
+
+            if (escolha == 1) {
+                break;
+            } else if (escolha == 2) {
+                return 0;
+            } else {
+                printf("Opcao Invalida, Tente novamente.\n");
+            }
+        }
+    }
+}
+
+int header(int errorType){
     if(errorType == 403){
         setConsoleColor(4);
         printf("\n\033[1mSENHA INCORRETA!\033[0m\n\n");
@@ -168,16 +235,16 @@ int header(int errorType){
 
     setConsoleColor(1);
     printf("  _   _ _  _ ___ ___      ___ ___ __  __        _   ___  ___   \n");
-    printf(" | | | | \| |_ _| _ \    | _ \_ _|  \/  |      /_\ |   \/ __|  \n");
-    printf(" | |_| | .` || ||  _/    |  _/| || |\/| |     / _ \| |) \__ \  \n");
-    printf("  \___/|_|\_|___|_|      |_| |___|_|  |_|    /_/ \_\___/|___/  \n");
+    printf(" | | | | \\| |_ _| _ \\    | _ \\_ _|  \\/  |      /_\\ |   \\/ __|  \n");
+    printf(" | |_| | .` || ||  _/    |  _/| || |\\/| |     / _ \\| |) \\__ \\  \n");
+    printf("  \\___/|_|\\_|___|_|      |_| |___|_|  |_|    /_/ \\_\\___/|___/  \n");
     printf("                                                               \n\n");
     
     setConsoleColor(2);
     printf(" ___                             ___        .-.                                   ___      \n");
-    printf("(   )                           (   )      /    \                           .-.  (   )     \n");
+    printf("(   )                           (   )      /    \\                           .-.  (   )     \n");
     printf(" | | .-.     .--.    ___ .-.     | |_      | .`. ;   ___ .-.     ___  ___  ( __)  | |_     \n");
-    printf(" | |/   \   /    \  (   )   \   (   __)    | |(___) (   )   \   (   )(   ) (''') (   __)   \n");
+    printf(" | |/   \\   /    \\  (   )   \\   (   __)    | |(___) (   )   \\   (   )(   ) (''') (   __)   \n");
     printf(" |  .-. .  |  .-. ;  | ' .-. ;   | |       | |_      | ' .-. ;   | |  | |   | |   | |      \n");
     printf(" | |  | |  | |  | |  |  / (___)  | | ___  (   __)    |  / (___)  | |  | |   | |   | | ___  \n");
     printf(" | |  | |  | |  | |  | |         | |(   )  | |       | |         | |  | |   | |   | |(   ) \n");
