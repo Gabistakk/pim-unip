@@ -83,7 +83,6 @@ int loginScreen() {
         printf("\nDigite sua Senha: ");
         fgets(senha, sizeof(senha), stdin);
         senha[strcspn(senha, "\n")] = '\0';
-        getchar();
 
         if(strcmp(senha, senhaCaixa) == 0) {
             printf("Caixa LOGADO\n");
@@ -96,7 +95,6 @@ int loginScreen() {
         printf("\nDigite sua Senha: ");
         fgets(senha, sizeof(senha), stdin);
         senha[strcspn(senha, "\n")] = '\0';
-        getchar();
 
         if(strcmp(senha, senhaVendas) == 0) {
             printf("Vendas LOGADO\n");
