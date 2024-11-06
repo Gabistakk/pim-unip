@@ -5,7 +5,6 @@
 #include <limits.h>
 #include <float.h>
 #include <stdbool.h>
-#include <windows.h>
 
 // DECLARAÇÕES DAS FUNÇÕES (ASSOCIA NOME ÀS FUNÇÕES PARA CHAMÁ-LAS MAIS TARDE)
 int header(int errorType);
